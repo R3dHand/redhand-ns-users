@@ -1,0 +1,23 @@
+{
+  "name": "ns-api",
+  "version": "1.0.0",
+  "description": "backend services for nutrishare",
+  "main": "index.js",
+  "scripts": {
+    "test": "test",
+    "start": "nodemon --exec babel-node src/index"
+  },
+  "author": "redhand",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.26.9",
+    "@babel/node": "^7.26.0",
+    "@babel/preset-env": "^7.26.9",
+    "nodemon": "^3.1.9"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "ns-fdc": "^1.1.7"
+  }
+}
