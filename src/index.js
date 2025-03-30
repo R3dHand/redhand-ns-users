@@ -1,13 +1,12 @@
 import express from 'express';
 import cors from 'cors';
-
 const session = require('express-session');
 const Keycloak = require('keycloak-connect');
-const memoryStore = new session.MemoryStore();
 
 const app = express();
 const port = 3000;
 
+const memoryStore = new session.MemoryStore();
 app.use(
     session({
         secret: 'your-secret',
