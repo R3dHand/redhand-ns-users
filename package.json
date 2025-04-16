@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "backend services for nutrishare",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "test",
     "start": "nodemon --exec babel-node src/index"
@@ -18,8 +19,10 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.21.2",
+    "express-camelcase-response-keys": "^1.0.1",
     "express-session": "^1.18.1",
     "keycloak-connect": "^26.1.1",
+    "mariadb": "^3.4.1",
     "ns-fdc": "^1.1.7"
   }
 }

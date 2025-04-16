@@ -1,10 +1,25 @@
-import express from 'express';
+import * as preferences from './repository/user-preferences.js';
+
 import cors from 'cors';
-const session = require('express-session');
-const Keycloak = require('keycloak-connect');
+import session from 'express-session';
+import express from 'express';
+import camelcase from 'express-camelcase-response-keys';
+
+import KeycloakConnect from 'keycloak-connect';
 
 const app = express();
 const port = 3000;
+
+const keycloak = new KeycloakConnect({
+    clientId: "redhand-ns",
+    bearerOnly: true,
+    serverUrl: "http://localhost:8080",
+    realm: "redhand",
+    realmPublicKey: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuFWYz1aUaYTiD+J8Ezoy0/pfkOd6LUT7yeOcFCEcwU0fzYckwnrByxFkXj3eToRSHnDTEAwndvsGaSETiEblCsR+KZp2CQjf5PzSqJWH2Wz3MroyBDxOpDCus/OA7Xo992FUBTpBPEzNzAzuuQ1amWsTh0FOTUA3ucR/T/8OBtwqUm+IPmQN1VAiBVrieUWTQV2+CzztYVif0BseSEW0X0R/ji0lGS4GZtBzU3elwuldPu4d7GphYWQbeVGlacGTt1t0AL8jLXPRZFCcjRANkSEiDt2zmjhxhQOPPZqUftIjh3qKM03GsjSWKQUwv7UF2quBelVGOD+5awto6JRlMQIDAQAB",
+});
+
+// protect all routes by default
+const protectedRoutes = keycloak.protect();
 
 const memoryStore = new session.MemoryStore();
 app.use(
@@ -15,31 +30,28 @@ app.use(
         store: memoryStore
     })
 );
-
-const kcConfig = {
-    clientId: "redhand-ns",
-    bearerOnly: true,
-    serverUrl: "http://localhost:8080",
-    realm: "redhand",
-    realmPublicKey: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArlRnh84SPyHYb+8QknWeIZtvar+bXN9kWLoVjHw1a6zZQs3TMlHd9bavxzp98+ZPoEmW8BonArWd2cQctyaRmIKfrdaltA0olmv80fkihwj2w1wrvdRt4vnKXwR2873KMlPq1MYb2peEVZ+rM5wGG6SVauZgfJceNiE4CW3Dd8ySZf3ruSHtnirI/uuL5kOx/X2jLEmNLf/h7rmLuoa7sqe4rPhSoeqz1gwHAmVK1ZgjI5wWnjZm3NPf3z0qHxAd1pIEXfjsiaTMALW638hFrSx6kcGXcQFQgYp2DWKkzHt10Mor8NYbPLIJY4NyZCzV7lq0hfHheCIXI0FTOoYWSwIDAQAB",
-};
-
-const keycloak = new Keycloak({ store: memoryStore }, kcConfig);
-// protect all routes by default
-const protectedRoutes = keycloak.protect();
-
 app.use(
     cors(),
     keycloak.middleware(),
-    protectedRoutes
+    protectedRoutes,
+    camelcase({ deep: true }),
+    express.json()
 );
 
-app.get('/HelloWorld', (req, res) => {
-  	console.log(`processing request`);
-    res.send('Hello World!');
+// endpoints
+app.get('/preferences', async (req, res) => {
+    const sub = req.kauth.grant.access_token.content.sub;
+    res.send(await preferences.get(sub));
 });
 
+app.patch('/preferences', async (req, res) => {
+    const sub = req.kauth.grant.access_token.content.sub;
+    res.send(await preferences.patch(sub, req.body));
+});
+
+
+
 app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
+  console.log(`Listening on port ${port}.`);
 });
 

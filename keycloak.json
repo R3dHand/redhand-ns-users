@@ -1,0 +1,8 @@
+{
+    "clientId": "redhand-ns",
+    "bearerOnly": true,
+    "serverUrl": "http://localhost:8080",
+    "realm": "redhand",
+    "realmPublicKey": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuFWYz1aUaYTiD+J8Ezoy0/pfkOd6LUT7yeOcFCEcwU0fzYckwnrByxFkXj3eToRSHnDTEAwndvsGaSETiEblCsR+KZp2CQjf5PzSqJWH2Wz3MroyBDxOpDCus/OA7Xo992FUBTpBPEzNzAzuuQ1amWsTh0FOTUA3ucR/T/8OBtwqUm+IPmQN1VAiBVrieUWTQV2+CzztYVif0BseSEW0X0R/ji0lGS4GZtBzU3elwuldPu4d7GphYWQbeVGlacGTt1t0AL8jLXPRZFCcjRANkSEiDt2zmjhxhQOPPZqUftIjh3qKM03GsjSWKQUwv7UF2quBelVGOD+5awto6JRlMQIDAQAB"
+}
+
