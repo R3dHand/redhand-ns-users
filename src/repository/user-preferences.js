@@ -38,8 +38,21 @@ export async function patch(sub, preferences) {
         password: 'redhand'
     });
     try {
-        let res = await conn.query(`UPDATE users.preferences SET theme=? where UserId=?`, [preferences.theme, sub]);
-        return {"affectedRows": res.affectedRows};
+        let patchResponse = await conn.query(
+            `UPDATE users.preferences SET theme=? where UserId=?`,
+            [preferences.theme, sub]
+        );
+        
+        if (patchResponse.affectedRows > 0) {
+            let [updatedRow] = await conn.query(
+                `SELECT theme FROM users.preferences WHERE UserId=?`,
+                [sub]
+            );
+
+            return updatedRow;
+        } else {
+            return "No rows updated";
+        }
     } finally {
         conn.end();
     }
